@@ -43,14 +43,37 @@ jobs:
 
       - name: Run all tests
         if: "github.event.inputs.deployment_target=='all'"
-        run: pytest
+        run: pytest --alluredir=allure-results
         
       - name: Run smoke tests
         if: "github.event.inputs.deployment_target=='smoke'"
-        run: pytest -m smoke
+        run: pytest -m smoke --alluredir=allure-results
 
       - name: Run regression tests
         if: "github.event.inputs.deployment_target=='regression'"
-        run: pytest -m regression
+        run: pytest -m regression --alluredir=allure-results
+      - name: install java
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'microsoft' 
+          java-version: '17'
+      
+      - name: Install Allure
+        run: |
+          wget --no-check-certificate https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.25.0/allure-commandline-2.25.0.zip
+          unzip allure-commandline-*.zip -d allure
+          echo "ALLURE_HOME=$(pwd)/allure" >> $GITHUB_ENV
+          echo "$(pwd)/allure/bin" >> $GITHUB_PATH
+
+      - name: Generate report
+        run: allure generate -c allure-results -o allure-report
+      - name: save allure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+          retention-days: 1
+      
+
 
       
