@@ -10,15 +10,46 @@ jobs:
       - name: Checkout autotest
         uses: actions/checkout@v5
 
-      - name: Setup Chrome and ChromeDriver
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-      - name: Set up Python environment
+      - name: Setup Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.13'
-      - name: Install dependenciecies
-        run: pip install -r requirements.txt
+
+      - name: Install Chrome and ChromeDriver
+        run: |
+          # Установка Chrome
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+          # Установка ChromeDriver (совместимой версии)
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1)
+          wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION -O chromedriver_version
+          CHROMEDRIVER_VERSION=$(cat chromedriver_version)
+          wget -O /usr/local/bin/chromedriver https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
+          unzip /usr/local/bin/chromedriver -d /usr/local/bin/
+          chmod +x /usr/local/bin/chromedriver
+          rm /usr/local/bin/chromedriver_linux64.zip
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get install -y \
+            libx11-xcb1 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render0 \
+            libxcb-shm0 \
+            libxcb-xfixes0 \
+            libxcb-xinerama0 \
+            libxcb-xinput0 \
+            libxcb-xkb1 \
+            xkb-data
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Run tests
-        run: pytest
+        run: python -m unittest discover -v
