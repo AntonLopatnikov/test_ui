@@ -61,10 +61,17 @@ jobs:
       
       - name: Install Allure
         run: |
+          # Скачиваем и распаковываем Allure
           wget --no-check-certificate https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.25.0/allure-commandline-2.25.0.zip
           unzip allure-commandline-*.zip -d allure
-          echo "ALLURE_HOME=$(pwd)/allure" >> $GITHUB_ENV
-          echo "$(pwd)/allure/bin" >> $GITHUB_PATH
+          ALLURE_BIN_DIR=$(find allure -path "*/bin" -type d 2>/dev/null | head -1)
+          if [ -z "$ALLURE_BIN_DIR" ]; then
+            echo "Error: Allure bin directory not found!" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          echo "$ALLURE_BIN_DIR" >> $GITHUB_PATH
+          echo "Allure bin path: $ALLURE_BIN_DIR"
+
 
       - name: Generate report
         run: allure generate allure-results --clean -o allure-report
