@@ -1,22 +1,23 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import os
+from webdriver_manager import ChromeDriverManager
 
 @pytest.fixture
 def driver():
     options = Options()
-    options.add_argument("--headless")                    # Без GUI
-    options.add_argument("--no-sandbox")                 # Для CI
-    options.add_argument("--disable-dev-shm-usage")     # Избежание проблем с памятью
-    options.add_argument("--disable-gpu")               # Отключить GPU
-    options.add_argument("--remote-debugging-pipe")    # Альтернатива удалённой отладке
-    options.add_argument("--disable-features=VizDisplayCompositor")  # Для стабильности в headless
-
-    # Явный путь к Chrome (если установлен через apt)
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--remote-debugging-pipe")
     options.binary_location = "/usr/bin/google-chrome"
 
-
-    driver = webdriver.Chrome(options=options)
+    # Автоматически скачать и использовать совместимый ChromeDriver
+    driver = webdriver.Chrome(
+        executable_path=ChromeDriverManager().download_and_install(),
+        options=options
+    )
     yield driver
     driver.quit()
+
