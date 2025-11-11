@@ -11,7 +11,6 @@ on:
         options:
           - smoke
           - regression
-          - extended
           - all
     
 
@@ -42,8 +41,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests
+      - name: Run all tests
+        if: "github.event.inputs.deployment_target=='all'"
         run: pytest
+        
+      - name: Run smoke tests
+        if: "github.event.inputs.deployment_target=='smoke'"
+        run: pytest -m smoke
 
+      - name: Run regression tests
+        if: "github.event.inputs.deployment_target=='regression'"
+        run: pytest -m regression
 
       
