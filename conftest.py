@@ -8,10 +8,6 @@ def driver():
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--remote-debugging-pipe")
-    options.binary_location = "/usr/bin/google-chrome"
-    driver = webdriver.Chrome()
-    yield driver
-    driver.quit()
+    driver = webdriver.Chrome(options=options)
+    return chrome_driver
 
