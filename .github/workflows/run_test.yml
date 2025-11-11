@@ -74,14 +74,29 @@ jobs:
 
 
       - name: Generate report
-        run: allure generate allure-results --clean -o allure-report
+        run: allure generate allure-results --clean -o _site
       - name: save allure report
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
-          path: allure-report/
+          name: _site
+          path: _site/
           retention-days: 1
+  
+  
+  publish-report:
+    name: Report publication 
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v2
+    - name: Deploy ti GitHub Pages
+      id: Deployment
+      uses: actions/deploy-pages@v1.2.9
+    
       
+    
 
 
       
