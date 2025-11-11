@@ -12,12 +12,7 @@ def driver():
     options.add_argument("--disable-gpu")
     options.add_argument("--remote-debugging-pipe")
     options.binary_location = "/usr/bin/google-chrome"
-
-    # Автоматически скачать и использовать совместимый ChromeDriver
-    driver = webdriver.Chrome(
-        executable_path=ChromeDriverManager().download_and_install(),
-        options=options
-    )
+    driver = webdriver.Chrome()
     yield driver
     driver.quit()
 
