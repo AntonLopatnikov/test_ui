@@ -10,6 +10,10 @@ jobs:
       - name: Checkout autotest
         uses: actions/checkout@v5
 
+      - name: Setup Chrome and ChromeDriver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
       - name: Set up Python environment
         uses: actions/setup-python@v6
         with:
