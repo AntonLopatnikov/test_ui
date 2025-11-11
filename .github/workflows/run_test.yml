@@ -1,6 +1,19 @@
 name: pythom autotests
 
-on: [push]
+on: 
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: choose tests set
+        required: true
+        type: choose
+        default: smoke
+        options:
+          - smoke
+          - regression
+          - extended
+          - all
+    
 
 jobs:
   run-tests:
