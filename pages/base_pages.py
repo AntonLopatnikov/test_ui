@@ -1,4 +1,6 @@
 from selenium.webdriver.remote.webdriver import WebDriver
+import allure
+
 
 class BasePages:
 
@@ -8,6 +10,7 @@ class BasePages:
     def __init__(self, driver: WebDriver):
         self.driver = driver
 
+    @allure.feature("Create_url")
     def open_page(self):
             if self.this_url:
                 self.driver.get(f'{self.base_url}{self.this_url}')

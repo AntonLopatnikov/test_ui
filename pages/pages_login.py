@@ -1,3 +1,4 @@
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -6,6 +7,7 @@ from ..pages.base_pages import BasePages
 
 class PagesLogin(BasePages):
 
+    @allure.step("Create_pages")
     def fill_login_form(self,login):
         try:
             exit_banner = self.driver.find_element(By.CSS_SELECTOR, ".nbl-simpleControlButton__caption")
@@ -28,6 +30,7 @@ class PagesLogin(BasePages):
         click_button_login = self.driver.find_element(By.CSS_SELECTOR, '[data-test="button_continue"]')
         click_button_login.click()
 
+    @allure.feature("check_incorrect_email")
     def error_test(self,text):
         error_checking = WebDriverWait(self.driver, 5).until(
             EC.presence_of_element_located(

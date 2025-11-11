@@ -1,6 +1,6 @@
 import pytest
 from ..pages.pages_login import PagesLogin
-
+import allure
 
 
 @pytest.mark.smoke
